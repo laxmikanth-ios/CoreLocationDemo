@@ -47,6 +47,7 @@ class CoreLocationSession: NSObject {
         // is the more aggresive solution of GPS data collection
 //        locationManager.startUpdatingLocation()
         
+        // less aggressive on battery consumption and GPS data collection
         startSignificantLocationChanges()
         
         startMonitoringRegion()
