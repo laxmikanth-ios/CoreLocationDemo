@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import MapKit
 
 class ViewController: UIViewController {
+    
+    @IBOutlet weak var mapView: MKMapView!
     
     private let locationSession = CoreLocationSession()
 
@@ -16,6 +19,10 @@ class ViewController: UIViewController {
         
         convertCoordinateToPlacemark()
         convertPlacenameToCoordinate()
+        
+        // configure map view
+        // attempt to show the user's current location
+        mapView.showsUserLocation = true
     }
 
 

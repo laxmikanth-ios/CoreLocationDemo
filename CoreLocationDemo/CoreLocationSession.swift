@@ -43,7 +43,22 @@ class CoreLocationSession: NSObject {
          */
         
         // get updates for user location
-        locationManager.startUpdatingLocation()
+        
+        // is the more aggresive solution of GPS data collection
+//        locationManager.startUpdatingLocation()
+        
+        startSignificantLocationChanges()
+        
+        startMonitoringRegion()
+    }
+    
+    private func startSignificantLocationChanges() {
+        if !CLLocationManager.significantLocationChangeMonitoringAvailable() {
+            // not available on the device
+            return
+        }
+        // less aggressive that the startUpdtatingLocation() in GPS monitor changes
+        locationManager.startMonitoringSignificantLocationChanges()
     }
     
     public func convertCoordinateToPlacemark(coordinate: CLLocationCoordinate2D) {
@@ -74,6 +89,19 @@ class CoreLocationSession: NSObject {
             }
         }
     }
+    
+    // monitor a CLRegion
+    // a CLRegion is made up of a center coordinate and a radius in meters
+    private func startMonitoringRegion() {
+        let location = Location.getLocations()[2] // central park
+        let identifier = "monitoring region"
+        let region = CLCircularRegion(center: location.coordinate, radius: 500, identifier: identifier)
+        region.notifyOnEntry = true
+        region.notifyOnExit = false
+        locationManager.startMonitoring(for: region)
+    }
+    
+    
 }
     
 
@@ -108,11 +136,11 @@ extension CoreLocationSession: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        print("didEnterRegion")
+        print("didEnterRegion: \(region)")
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        print("didExitRegion")
+        print("didExitRegion: \(region)")
     }
     
 }
